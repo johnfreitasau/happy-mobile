@@ -20,7 +20,9 @@ const Routes: React.FC = () => {
         
         <Screen name="OrphanageDetails" component={OrphanageDetails} options={{
           headerShown: true,
-          header: () => <Header showCancel={false} title="Orphanage"/>
+          header: () => <Header 
+          showCancel={false} 
+          title="Orphanage"/>
         }}/>
 
         <Screen name="SelectMapPosition" 
