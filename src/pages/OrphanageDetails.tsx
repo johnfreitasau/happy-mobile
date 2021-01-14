@@ -5,8 +5,41 @@ import { Feather, FontAwesome } from '@expo/vector-icons';
 
 import mapMarkerImg from '../images/map-marker.png';
 import { RectButton } from 'react-native-gesture-handler';
+import { gql, useQuery } from '@apollo/client';
+import Routes from '../routes';
 
-export default function OrphanageDetails() {
+const ORPHANAGE_QUERY = gql`
+query findOrphanageById($id: String!) {
+  findOrphanageById(id: $id) {
+    id,
+    name,
+    email,
+    whatsapp,
+    latitude,
+    longitude,
+    about,
+    instructions,
+    openingHours,
+    openOnWeekends
+  }
+}
+`;
+
+const OrphanageDetails: React.FC = () => {
+
+  const { data, error, loading } = useQuery(ORPHANAGE_QUERY, {
+    // variables: { id: route.params.orphanage.id }
+    variables: { id: '43c5ee8e-57aa-46fa-bc0b-2db941c5f539' }
+  })
+
+  if (loading) {
+    return <Text>Loading ...</Text>
+  };
+
+  if (error) {
+    return <Text>Please try again: {error.name} | {error.message}</Text>
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.imagesContainer}>
@@ -18,16 +51,16 @@ export default function OrphanageDetails() {
       </View>
 
       <View style={styles.detailsContainer}>
-        <Text style={styles.title}>NSW Orphanage</Text>
-        <Text style={styles.description}>Email:</Text>
-        <Text style={styles.description}>WhatsApp:</Text>
-        <Text style={styles.description}>About:</Text>
+        <Text style={styles.title}>{data?.findOrphanageById.name}</Text>
+        <Text style={styles.description}>Email:{data?.findOrphanageById.email}</Text>
+        <Text style={styles.description}>WhatsApp:{data?.findOrphanageById.whatsapp}</Text>
+        <Text style={styles.description}>About:{data?.findOrphanageById.about}</Text>
       
         <View style={styles.mapContainer}>
           <MapView 
             initialRegion={{
-              latitude: -27.2092052,
-              longitude: -49.6401092,
+              latitude: data?.findOrphanageById.latitude,
+              longitude: data?.findOrphanageById.longitude,
               latitudeDelta: 0.008,
               longitudeDelta: 0.008,
             }} 
@@ -40,8 +73,8 @@ export default function OrphanageDetails() {
             <Marker 
               icon={mapMarkerImg}
               coordinate={{ 
-                latitude: -27.2092052,
-                longitude: -49.6401092
+                latitude: data?.findOrphanageById.latitude,
+                longitude: data?.findOrphanageById.longitude,
               }}
             />
           </MapView>
@@ -54,17 +87,25 @@ export default function OrphanageDetails() {
         <View style={styles.separator} />
 
         <Text style={styles.title}>Visit Instructions</Text>
-        <Text style={styles.description}>We are close to the Church. Just bring love to this beautiful house.</Text>
+        <Text style={styles.description}>{data?.findOrphanageById.instructions}</Text>
 
         <View style={styles.scheduleContainer}>
           <View style={[styles.scheduleItem, styles.scheduleItemBlue]}>
             <Feather name="clock" size={40} color="#2AB5D1" />
-            <Text style={[styles.scheduleText, styles.scheduleTextBlue]}>Open on Weekends</Text>
+            <Text style={[styles.scheduleText, styles.scheduleTextBlue]}>Opening hours: {`\n${data?.findOrphanageById.openingHours}`}</Text>
           </View>
-          <View style={[styles.scheduleItem, styles.scheduleItemGreen]}>
-            <Feather name="info" size={40} color="#39CC83" />
-            <Text style={[styles.scheduleText, styles.scheduleTextGreen]}>Open only on Weekdays</Text>
-          </View>
+          {data?.findOrphanageById?.openOnWeekends ? (
+            <View style={[styles.scheduleItem, styles.scheduleItemGreen]}>
+              <Feather name="info" size={40} color="#39CC83" />
+              <Text style={[styles.scheduleText, styles.scheduleTextGreen]}>Open on Weekends</Text>
+            </View>
+              ) : (
+            <View style={[styles.scheduleItem, styles.scheduleItemRed]}>
+              <Feather name="info" size={40} color="#FF669D" />
+              <Text style={[styles.scheduleText, styles.scheduleTextRed]}>Open only on Weekdays</Text>
+            </View>
+          )}
+
         </View>
 
         <RectButton style={styles.contactButton} onPress={() => {}}>
@@ -98,11 +139,11 @@ const styles = StyleSheet.create({
   title: {
     color: '#4D6F80',
     fontSize: 30,
-    fontFamily: 'Nunito_700Bold',
+    // fontFamily: 'Nunito_700Bold',
   },
 
   description: {
-    fontFamily: 'Nunito_600SemiBold',
+    // fontFamily: 'Nunito_600SemiBold',
     color: '#5c8599',
     lineHeight: 24,
     marginTop: 16,
@@ -129,7 +170,7 @@ const styles = StyleSheet.create({
   },
 
   routesText: {
-    fontFamily: 'Nunito_700Bold',
+    // fontFamily: 'Nunito_700Bold',
     color: '#0089a5'
   },
 
@@ -165,8 +206,15 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 
+  scheduleItemRed: {
+    backgroundColor: '#EDFFF6',
+    borderWidth: 1,
+    borderColor: '#A1E9C5',
+    borderRadius: 20,
+  },
+
   scheduleText: {
-    fontFamily: 'Nunito_600SemiBold',
+    // fontFamily: 'Nunito_600SemiBold',
     fontSize: 16,
     lineHeight: 24,
     marginTop: 20,
@@ -177,6 +225,10 @@ const styles = StyleSheet.create({
   },
 
   scheduleTextGreen: {
+    color: '#37C77F'
+  },
+
+  scheduleTextRed: {
     color: '#37C77F'
   },
 
@@ -191,9 +243,11 @@ const styles = StyleSheet.create({
   },
 
   contactButtonText: {
-    fontFamily: 'Nunito_800ExtraBold',
+    // fontFamily: 'Nunito_800ExtraBold',
     color: '#FFF',
     fontSize: 16,
     marginLeft: 16,
   }
 })
+
+export default OrphanageDetails;
