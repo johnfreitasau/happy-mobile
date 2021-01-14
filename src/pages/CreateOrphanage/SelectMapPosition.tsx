@@ -23,8 +23,8 @@ export default function SelectMapPosition() {
     <View style={styles.container}>
       <MapView 
         initialRegion={{
-          latitude: -27.2092052,
-          longitude: -49.6401092,
+          latitude: -33.7204618,
+          longitude: 150.9889242,
           latitudeDelta: 0.008,
           longitudeDelta: 0.008,
         }}
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   },
 
   nextButtonText: {
-    fontFamily: 'Nunito_800ExtraBold',
+    // fontFamily: 'Nunito_800ExtraBold',
     fontSize: 16,
     color: '#FFF',
   }
