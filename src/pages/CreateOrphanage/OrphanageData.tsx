@@ -3,23 +3,128 @@ import { ScrollView, View, StyleSheet, Switch, Text, TextInput, TouchableOpacity
 import { Feather } from '@expo/vector-icons';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { gql, useQuery, useMutation } from '@apollo/client';
 // import * as ImagePicker from 'expo-image-picker';
 
 interface OrphanageDataRouteParams {
   position: { latitude: number, longitude: number};
 }
 
+export type MutationCreateOrphanageArgs = {
+  options: OrphanageInsertInput;
+};
+
+export type Scalars = {
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
+  DateTime: any;
+};
+
+export type OrphanageInsertInput = {
+  name: Scalars['String'];
+  email: Scalars['String'];
+  whatsapp: Scalars['String'];
+  latitude: Scalars['Float'];
+  longitude: Scalars['Float'];
+  about: Scalars['String'];
+  instructions: Scalars['String'];
+  openingHours: Scalars['String'];
+  openOnWeekends: Scalars['Boolean'];
+};
+
+const CREATE_ORPHANAGE_MUTATION = gql`
+# mutation CreateOrphanage($options: OrphanageInsertInput!) {
+#   createOrphanage(options: $options) {
+#     id,
+#     name,
+#     email,
+#     whatsapp,
+#     latitude,
+#     longitude,
+#     about,
+#     instructions,
+#     openingHours,
+#     openOnWeekends
+#   }
+# }
+
+mutation CreateOrphanage{
+  createOrphanage(options: {
+    name: "tes02 house",
+    email: "tes01@gmail.com",
+    whatsapp: "+61413966337",
+    latitude: -33.71606747297306,
+    longitude: 150.97515317055928,
+    about: "holidays house about",
+    instructions: "close to the church",
+    openingHours: "9 to 12pm",
+    openOnWeekends: true,
+  }){
+    id,
+    name,
+    email,
+    whatsapp,
+    latitude,
+    longitude,
+    about,
+    instructions,
+    openingHours,
+    openOnWeekends
+  }
+}
+`;
+
+
+
 export default function OrphanageData() {
+  
+  const [open_on_weekends, setOpenOnWeekends] = useState(false);
+
   const route = useRoute();
   const navigation = useNavigation();
-
-  const [open_on_weekends, setOpenOnWeekends] = useState(false);
 
   const params = route.params as OrphanageDataRouteParams;
   const position = params.position;
 
+  const [insertOrphanage, { loading, error }] = useMutation(CREATE_ORPHANAGE_MUTATION);
+
+  if (loading) {
+    return <Text>Loading ...</Text>
+  };
+
+  if (error) {
+    return <Text>Please try again: ${
+      error.name + '\n' +
+      error.message + '\n' +
+      error.networkError + '\n' +
+      error.graphQLErrors + '\n' +
+      error.stack + '\n' +
+      error.extraInfo + '\n'
+    
+    
+    }</Text>
+  };
+
   function handleCreateOrphanage() {
     // todo
+    insertOrphanage({
+      variables: {
+        name: "test1 house",
+        email: "test1@gmail.com",
+        whatsapp: "+61413966337",
+        latitude: -30.71606747297306,
+        longitude: 155.97515317055928,
+        about: "test house about",
+        instructions: "close to the church",
+        openingHours: "9 to 12pm",
+        openOnWeekends: true,
+      }
+    })
+
+
   }
 
   // async function handleSelectImages() {
