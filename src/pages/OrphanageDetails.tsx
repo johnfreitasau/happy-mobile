@@ -6,6 +6,7 @@ import { Feather, FontAwesome } from '@expo/vector-icons';
 import mapMarkerImg from '../images/map-marker.png';
 import { RectButton } from 'react-native-gesture-handler';
 import { gql, useQuery } from '@apollo/client';
+import { useRoute } from '@react-navigation/native';
 import Routes from '../routes';
 
 const ORPHANAGE_QUERY = gql`
@@ -25,11 +26,18 @@ query findOrphanageById($id: String!) {
 }
 `;
 
+interface OrphanageDetailsRouteParams {
+  id: string;
+}
+
 const OrphanageDetails: React.FC = () => {
 
+  const route = useRoute();
+  const params =route.params as OrphanageDetailsRouteParams;
+
   const { data, error, loading } = useQuery(ORPHANAGE_QUERY, {
-    // variables: { id: route.params.orphanage.id }
-    variables: { id: '43c5ee8e-57aa-46fa-bc0b-2db941c5f539' }
+    variables: { id: params.id }
+    // variables: { id: '43c5ee8e-57aa-46fa-bc0b-2db941c5f539' }
   })
 
   if (loading) {
@@ -44,9 +52,8 @@ const OrphanageDetails: React.FC = () => {
     <ScrollView style={styles.container}>
       <View style={styles.imagesContainer}>
         <ScrollView horizontal pagingEnabled>
-          <Image style={styles.image} source={{ uri: 'https://fmnova.com.br/images/noticias/safe_image.jpg' }} />
-          <Image style={styles.image} source={{ uri: 'https://fmnova.com.br/images/noticias/safe_image.jpg' }} />
-          <Image style={styles.image} source={{ uri: 'https://fmnova.com.br/images/noticias/safe_image.jpg' }} />
+          <Image style={styles.image} source={require('../images/children.png')} />
+          <Image style={styles.image} source={require('../images/help.png')} />
         </ScrollView>
       </View>
 
@@ -207,9 +214,9 @@ const styles = StyleSheet.create({
   },
 
   scheduleItemRed: {
-    backgroundColor: '#EDFFF6',
+    backgroundColor: '#FFE4EE',
     borderWidth: 1,
-    borderColor: '#A1E9C5',
+    borderColor: '#ffbcd4',
     borderRadius: 20,
   },
 
@@ -229,7 +236,7 @@ const styles = StyleSheet.create({
   },
 
   scheduleTextRed: {
-    color: '#37C77F'
+    color: '#FF669D'
   },
 
   contactButton: {

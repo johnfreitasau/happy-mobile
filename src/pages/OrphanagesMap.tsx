@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import MapView, { Marker, Callout, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -60,16 +60,14 @@ const OrphanagesMap: React.FC = () => {
 
     const { data, error, loading } = useQuery(ORPHANAGES_QUERY);
 
-    if (error) {
-      console.log('error message:',error.message)
-      console.log('error extraInfo:',error.extraInfo)
-      console.log('error graphQLErrors:',error.graphQLErrors)
-      console.log('error name:',error.name)
-      console.log('error networkError:',error.networkError)
-      console.log('error stack:',error.stack)
-    }
-
-    console.log('DATA:',data);
+    const handleNavigateToOrphanageDetails = useCallback((id : string) => {
+      navigation.navigate('OrphanageDetails', {id});
+    }, []);
+  
+    
+    const handleNativateToCreateOrphanage = useCallback(() => {
+      navigation.navigate('SelectMapPosition');
+    },[]);
 
     const [fontsLoaded] = useFonts({
       nunito600: Nunito_600SemiBold, 
@@ -80,14 +78,6 @@ const OrphanagesMap: React.FC = () => {
     if (!fontsLoaded) {
       return null;
     }
-    
-    function handleNavigateToOrphanageDetails() {
-      navigation.navigate('OrphanageDetails');
-    }
-  
-    function handleNativateToCreateOrphanage() {
-      navigation.navigate('SelectMapPosition');
-    }
 
     if (loading) {
       return <Text>Loading ...</Text>
@@ -96,8 +86,6 @@ const OrphanagesMap: React.FC = () => {
     if (error) {
       return <Text>Please try again: {error.name} | {error.message}</Text>
     };
-
-
 
     return (
       <View style={styles.container}>
@@ -127,9 +115,11 @@ const OrphanagesMap: React.FC = () => {
                 latitude: orphanage.latitude,
                 longitude: orphanage.longitude
               }}>
-              <Callout tooltip onPress={handleNavigateToOrphanageDetails}>
+              <Callout tooltip onPress={() => handleNavigateToOrphanageDetails(orphanage.id)}>
                 <View style={styles.calloutContainer}>
                   <Text style={styles.calloutText}>{orphanage.name}</Text>
+                  <Text style={styles.calloutDescription}>{orphanage.about}</Text>
+                  <Text style={styles.calloutDescription}>{orphanage.whatsapp}</Text>
                 </View>
               </Callout>
             </Marker>
@@ -158,8 +148,8 @@ const OrphanagesMap: React.FC = () => {
     },
   
     calloutContainer: {
-      width: 160,
-      height: 46,
+      width: 190,
+      height: 60,
       paddingHorizontal: 16,
       backgroundColor: 'rgba(255, 255, 255, 0.8)',
       borderRadius: 16,
@@ -170,6 +160,11 @@ const OrphanagesMap: React.FC = () => {
       color: '#0089a5',
       fontSize: 14,
       fontFamily: 'nunito700',
+    },
+    calloutDescription: {
+      color: '#0089a5',
+      fontSize: 12,
+      fontFamily: 'nunito600',
     },
   
     footer: {
