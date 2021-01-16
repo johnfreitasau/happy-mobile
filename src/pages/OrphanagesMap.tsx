@@ -8,57 +8,13 @@ import { useFonts } from 'expo-font';
 import { Nunito_600SemiBold, Nunito_700Bold, Nunito_800ExtraBold } from '@expo-google-fonts/nunito';
 import { useNavigation } from '@react-navigation/native';
 import { RectButton } from 'react-native-gesture-handler';
-import { gql, useQuery } from '@apollo/client';
-import { AppLoading } from 'expo';
-
-export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  DateTime: any;
-};
-
-export type Orphanage = {
-  __typename?: 'Orphanage';
-  id: Scalars['String'];
-  name: Scalars['String'];
-  email: Scalars['String'];
-  whatsapp: Scalars['String'];
-  latitude: Scalars['Float'];
-  longitude: Scalars['Float'];
-  about: Scalars['String'];
-  instructions: Scalars['String'];
-  openingHours: Scalars['String'];
-  openOnWeekends: Scalars['Boolean'];
-  createdAt: Scalars['DateTime'];
-  updatedAt: Scalars['DateTime'];
-};
-
-
-const ORPHANAGES_QUERY = gql`
-query orphanages {
-  orphanages{
-    id,
-    name,
-    email,
-    whatsapp,
-    latitude,
-    longitude,
-    about,
-    instructions,
-    openingHours,
-    openOnWeekends
-  }
-}
-`;
+import { useOrphanagesQuery } from '../generated/graphql';
 
 const OrphanagesMap: React.FC = () => {
-
+  
     const navigation = useNavigation();
 
-    const { data, error, loading } = useQuery(ORPHANAGES_QUERY);
+    const {data, error, loading} = useOrphanagesQuery();
 
     const handleNavigateToOrphanageDetails = useCallback((id : string) => {
       navigation.navigate('OrphanageDetails', {id});
@@ -101,7 +57,7 @@ const OrphanagesMap: React.FC = () => {
             latitudeDelta: 0.008,
             longitudeDelta: 0.008
         }}>
-          {data?.orphanages.map((orphanage: Orphanage) => (
+          {data?.orphanages.map((orphanage) => (
             <Marker
               key={orphanage.id}
               icon={mapMarker}
@@ -110,8 +66,6 @@ const OrphanagesMap: React.FC = () => {
                 y: 0.8,
               }}
               coordinate={{
-                // latitude: -33.7540892,
-                // longitude: 150.9927575,
                 latitude: orphanage.latitude,
                 longitude: orphanage.longitude
               }}>

@@ -8,23 +8,8 @@ import { RectButton } from 'react-native-gesture-handler';
 import { gql, useQuery } from '@apollo/client';
 import { useRoute } from '@react-navigation/native';
 import Routes from '../routes';
+import { useFindOrphanageByIdQuery } from '../generated/graphql';
 
-const ORPHANAGE_QUERY = gql`
-query findOrphanageById($id: String!) {
-  findOrphanageById(id: $id) {
-    id,
-    name,
-    email,
-    whatsapp,
-    latitude,
-    longitude,
-    about,
-    instructions,
-    openingHours,
-    openOnWeekends
-  }
-}
-`;
 
 interface OrphanageDetailsRouteParams {
   id: string;
@@ -35,10 +20,9 @@ const OrphanageDetails: React.FC = () => {
   const route = useRoute();
   const params =route.params as OrphanageDetailsRouteParams;
 
-  const { data, error, loading } = useQuery(ORPHANAGE_QUERY, {
-    variables: { id: params.id }
-    // variables: { id: '43c5ee8e-57aa-46fa-bc0b-2db941c5f539' }
-  })
+  const { data, error, loading } = useFindOrphanageByIdQuery({
+    variables: { id: params.id },
+  });
 
   if (loading) {
     return <Text>Loading ...</Text>
@@ -46,6 +30,10 @@ const OrphanageDetails: React.FC = () => {
 
   if (error) {
     return <Text>Please try again: {error.name} | {error.message}</Text>
+  };
+
+  if (!data?.findOrphanageById?.latitude || !data?.findOrphanageById?.longitude) {
+    return <Text>Latitude / Longitude missing.</Text>
   };
 
   return (
@@ -58,16 +46,16 @@ const OrphanageDetails: React.FC = () => {
       </View>
 
       <View style={styles.detailsContainer}>
-        <Text style={styles.title}>{data?.findOrphanageById.name}</Text>
-        <Text style={styles.description}>Email:{data?.findOrphanageById.email}</Text>
-        <Text style={styles.description}>WhatsApp:{data?.findOrphanageById.whatsapp}</Text>
-        <Text style={styles.description}>About:{data?.findOrphanageById.about}</Text>
+        <Text style={styles.title}>{data?.findOrphanageById?.name}</Text>
+        <Text style={styles.description}>Email:{data?.findOrphanageById?.email}</Text>
+        <Text style={styles.description}>WhatsApp:{data?.findOrphanageById?.whatsapp}</Text>
+        <Text style={styles.description}>About:{data?.findOrphanageById?.about}</Text>
       
         <View style={styles.mapContainer}>
           <MapView 
             initialRegion={{
-              latitude: data?.findOrphanageById.latitude,
-              longitude: data?.findOrphanageById.longitude,
+              latitude: data.findOrphanageById.latitude,
+              longitude: data.findOrphanageById.longitude,
               latitudeDelta: 0.008,
               longitudeDelta: 0.008,
             }} 

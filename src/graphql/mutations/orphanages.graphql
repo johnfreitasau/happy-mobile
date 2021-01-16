@@ -1,0 +1,14 @@
+mutation CreateOrphanage($options: OrphanageInsertInput!) {
+  createOrphanage(options: $options) {
+    id,
+    name,
+    email,
+    whatsapp,
+    latitude,
+    longitude,
+    about,
+    instructions,
+    openingHours,
+    openOnWeekends
+  }
+}
