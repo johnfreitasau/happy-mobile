@@ -1,82 +1,13 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { ScrollView, View, StyleSheet, Switch, Text, TextInput, TouchableOpacity } from 'react-native';
-import { Feather } from '@expo/vector-icons';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { gql, useQuery, useMutation } from '@apollo/client';
+import { Nunito_600SemiBold, Nunito_700Bold, Nunito_800ExtraBold, useFonts } from '@expo-google-fonts/nunito';
 import { useCreateOrphanageMutation } from '../../generated/graphql';
-// import * as ImagePicker from 'expo-image-picker';
 
 interface OrphanageDataRouteParams {
   position: { latitude: number, longitude: number};
 }
-
-// export type MutationCreateOrphanageArgs = {
-//   options: OrphanageInsertInput;
-// };
-
-// export type Scalars = {
-//   ID: string;
-//   String: string;
-//   Boolean: boolean;
-//   Int: number;
-//   Float: number;
-//   DateTime: any;
-// };
-
-// export type OrphanageInsertInput = {
-//   name: Scalars['String'];
-//   email: Scalars['String'];
-//   whatsapp: Scalars['String'];
-//   latitude: Scalars['Float'];
-//   longitude: Scalars['Float'];
-//   about: Scalars['String'];
-//   instructions: Scalars['String'];
-//   openingHours: Scalars['String'];
-//   openOnWeekends: Scalars['Boolean'];
-// };
-
-// const CREATE_ORPHANAGE_MUTATION = gql`
-// # mutation CreateOrphanage($options: OrphanageInsertInput!) {
-// #   createOrphanage(options: $options) {
-// #     id,
-// #     name,
-// #     email,
-// #     whatsapp,
-// #     latitude,
-// #     longitude,
-// #     about,
-// #     instructions,
-// #     openingHours,
-// #     openOnWeekends
-// #   }
-// # }
-
-// mutation CreateOrphanage{
-//   createOrphanage(options: {
-//     name: "tes02 house",
-//     email: "tes01@gmail.com",
-//     whatsapp: "+61413966337",
-//     latitude: -33.71606747297306,
-//     longitude: 150.97515317055928,
-//     about: "holidays house about",
-//     instructions: "close to the church",
-//     openingHours: "9 to 12pm",
-//     openOnWeekends: true,
-//   }){
-//     id,
-//     name,
-//     email,
-//     whatsapp,
-//     latitude,
-//     longitude,
-//     about,
-//     instructions,
-//     openingHours,
-//     openOnWeekends
-//   }
-// }
-// `;
 
 const OrphanageData: React.FC = () => {
   const [name, setName] = useState('');
@@ -98,16 +29,6 @@ const OrphanageData: React.FC = () => {
 
     const { latitude, longitude } = params.position;
 
-    console.log('Name:', name)
-    console.log('email:', email)
-    console.log('whatsapp:', whatsapp)
-    console.log('latitude:', latitude)
-    console.log('longitude:', longitude)
-    console.log('about:', about)
-    console.log('instructions:', instructions)
-    console.log('openingHours:', openingHours)
-    console.log('openOnWeekends:', openOnWeekends)
-
     await createOrphanage({
       variables: {
         options: {
@@ -120,22 +41,22 @@ const OrphanageData: React.FC = () => {
           instructions,
           openingHours,
           openOnWeekends,
-          // name: "tes02 house",
-          // email: "tes01@gmail.com",
-          // whatsapp: "+61413966337",
-          // latitude: -33.71606747297306,
-          // longitude: 150.97515317055928,
-          // about: "holidays house about",
-          // instructions: "close to the church",
-          // openingHours: "9 to 12pm",
-          // openOnWeekends: true,
         }
       }
     })
 
     navigation.navigate('OrphanageMap');
   }
-  // }, [])
+
+  const [fontsLoaded] = useFonts({
+    nunito600: Nunito_600SemiBold, 
+    nunito700: Nunito_700Bold, 
+    nunito800: Nunito_800ExtraBold
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   if (loading) {
     return <Text>Loading ...</Text>
@@ -230,7 +151,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#5c8599',
     fontSize: 24,
-    // fontFamily: 'Nunito_700Bold',
+    fontFamily: 'nunito700',
     marginBottom: 32,
     paddingBottom: 24,
     borderBottomWidth: 0.8,
@@ -239,7 +160,7 @@ const styles = StyleSheet.create({
 
   label: {
     color: '#8fa7b3',
-    // fontFamily: 'Nunito_600SemiBold',
+    fontFamily: 'nunito600',
     marginBottom: 8,
   },
 
@@ -289,7 +210,7 @@ const styles = StyleSheet.create({
   },
 
   nextButtonText: {
-    // fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'nunito800',
     fontSize: 16,
     color: '#FFF',
   }

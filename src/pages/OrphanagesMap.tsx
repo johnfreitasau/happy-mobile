@@ -1,13 +1,12 @@
 import React, { useCallback } from 'react';
-
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import MapView, { Marker, Callout, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Feather } from '@expo/vector-icons';
-import mapMarker from '../../src/images/map-marker.png';
 import { useFonts } from 'expo-font';
 import { Nunito_600SemiBold, Nunito_700Bold, Nunito_800ExtraBold } from '@expo-google-fonts/nunito';
 import { useNavigation } from '@react-navigation/native';
 import { RectButton } from 'react-native-gesture-handler';
+import mapMarker from '../../src/images/map-marker.png';
 import { useOrphanagesQuery } from '../generated/graphql';
 
 const OrphanagesMap: React.FC = () => {
@@ -20,7 +19,6 @@ const OrphanagesMap: React.FC = () => {
       navigation.navigate('OrphanageDetails', {id});
     }, []);
   
-    
     const handleNativateToCreateOrphanage = useCallback(() => {
       navigation.navigate('SelectMapPosition');
     },[]);
@@ -72,7 +70,6 @@ const OrphanagesMap: React.FC = () => {
               <Callout tooltip onPress={() => handleNavigateToOrphanageDetails(orphanage.id)}>
                 <View style={styles.calloutContainer}>
                   <Text style={styles.calloutText}>{orphanage.name}</Text>
-                  <Text style={styles.calloutDescription}>{orphanage.about}</Text>
                   <Text style={styles.calloutDescription}>{orphanage.whatsapp}</Text>
                 </View>
               </Callout>
@@ -81,7 +78,7 @@ const OrphanagesMap: React.FC = () => {
         </MapView>
   
         <View style={styles.footer}>
-          <Text style={styles.footerText}>2 orphanages found.</Text>
+          <Text style={styles.footerText}>{data?.orphanages.length} orphanages found.</Text>
   
           <RectButton style={styles.createOrphanageButton} onPress={handleNativateToCreateOrphanage}>
             <Feather name="plus" size={20} color="#FFF"/>
