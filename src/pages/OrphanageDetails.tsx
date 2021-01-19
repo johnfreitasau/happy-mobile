@@ -1,13 +1,11 @@
-import React from 'react';
-import { Image, View, ScrollView, Text, StyleSheet, Dimensions } from 'react-native';
+import React, { useCallback } from 'react';
+import { Image, View, ScrollView, Text, StyleSheet, Dimensions, TouchableOpacity, Linking } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { Feather, FontAwesome } from '@expo/vector-icons';
-
 import mapMarkerImg from '../images/map-marker.png';
 import { RectButton } from 'react-native-gesture-handler';
-import { gql, useQuery } from '@apollo/client';
 import { useRoute } from '@react-navigation/native';
-import Routes from '../routes';
+import { Nunito_600SemiBold, Nunito_700Bold, Nunito_800ExtraBold, useFonts } from '@expo-google-fonts/nunito';
 import { useFindOrphanageByIdQuery } from '../generated/graphql';
 
 
@@ -23,6 +21,28 @@ const OrphanageDetails: React.FC = () => {
   const { data, error, loading } = useFindOrphanageByIdQuery({
     variables: { id: params.id },
   });
+
+  const handleOpenGoogleMap = useCallback(() => {
+    Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${data?.findOrphanageById?.latitude},${data?.findOrphanageById?.longitude}`)
+  }, []);
+
+  const handleOpenWhatsApp = useCallback(() => {
+    Linking.openURL(
+      `whatsapp://send?text=Hi ${data?.findOrphanageById?.name}, I'd like to visit your Orphanage unit.`,
+    );
+  }, []);
+
+
+
+  const [fontsLoaded] = useFonts({
+    nunito600: Nunito_600SemiBold, 
+    nunito700: Nunito_700Bold, 
+    nunito800: Nunito_800ExtraBold
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   if (loading) {
     return <Text>Loading ...</Text>
@@ -73,10 +93,9 @@ const OrphanageDetails: React.FC = () => {
               }}
             />
           </MapView>
-
-          <View style={styles.routesContainer}>
+          <TouchableOpacity onPress={handleOpenGoogleMap} style={styles.routesContainer}>
             <Text style={styles.routesText}>See the route in Google Maps</Text>
-          </View>
+          </TouchableOpacity>
         </View>
       
         <View style={styles.separator} />
@@ -103,7 +122,7 @@ const OrphanageDetails: React.FC = () => {
 
         </View>
 
-        <RectButton style={styles.contactButton} onPress={() => {}}>
+        <RectButton style={styles.contactButton} onPress={handleOpenWhatsApp}>
           <FontAwesome name="whatsapp" size={24} color="#FFF" />
           <Text style={styles.contactButtonText}>Get in touch</Text>
         </RectButton>
@@ -134,11 +153,11 @@ const styles = StyleSheet.create({
   title: {
     color: '#4D6F80',
     fontSize: 30,
-    // fontFamily: 'Nunito_700Bold',
+    fontFamily: 'nunito700',
   },
 
   description: {
-    // fontFamily: 'Nunito_600SemiBold',
+    fontFamily: 'nunito600',
     color: '#5c8599',
     lineHeight: 24,
     marginTop: 16,
@@ -165,8 +184,8 @@ const styles = StyleSheet.create({
   },
 
   routesText: {
-    // fontFamily: 'Nunito_700Bold',
-    color: '#0089a5'
+    fontFamily: 'nunito700',
+    color: '#000000'
   },
 
   separator: {
@@ -209,7 +228,7 @@ const styles = StyleSheet.create({
   },
 
   scheduleText: {
-    // fontFamily: 'Nunito_600SemiBold',
+    fontFamily: 'nunito600',
     fontSize: 16,
     lineHeight: 24,
     marginTop: 20,
@@ -238,7 +257,7 @@ const styles = StyleSheet.create({
   },
 
   contactButtonText: {
-    // fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'nunito800',
     color: '#FFF',
     fontSize: 16,
     marginLeft: 16,

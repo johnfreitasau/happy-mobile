@@ -4,12 +4,20 @@ import { View, StyleSheet, Dimensions, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RectButton } from 'react-native-gesture-handler';
 import MapView, { MapEvent, Marker } from 'react-native-maps';
-
+import { Nunito_800ExtraBold, useFonts } from '@expo-google-fonts/nunito';
 import mapMarkerImg from '../../images/map-marker.png';
 
 export default function SelectMapPosition() {
   const navigation = useNavigation();
   const [position, setPosition] = useState({ latitude: 0, longitude: 0});
+
+  const [fontsLoaded] = useFonts({
+    nunito800: Nunito_800ExtraBold
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   function handleSelectMapPosition(event: MapEvent) {
     setPosition(event.nativeEvent.coordinate);
@@ -73,7 +81,7 @@ const styles = StyleSheet.create({
   },
 
   nextButtonText: {
-    // fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'nunito800',
     fontSize: 16,
     color: '#FFF',
   }
