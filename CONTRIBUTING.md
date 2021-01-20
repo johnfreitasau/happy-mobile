@@ -14,7 +14,7 @@ This project is MIT-licensed, and this means that you can implement and use what
 
 ## Commits and Code Style
 
-This project follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification and Eslint Lint Rules for identifying problematic patterns in the code.
+This project follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
 
 
 ## Bug reports
