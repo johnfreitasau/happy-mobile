@@ -1,10 +1,11 @@
 <h1 align="center">
-  HAPPY - Mobile
+  <img src=".github/images/logo.png" alt="Happy">
 </h1>
 
 <h3 align="center">
   Happy - Spread happiness Into The World.
 </h3>
+
 <h4 align="center">React Native | TypeScript | Graphql | Apollo Client | Expo</h4>
 <!-- E02041 -->
 <p align="center">
@@ -27,10 +28,13 @@
   <a href="#closed_book-license">License</a>
 </p>
 
+<p align="center">
+   <img src="./.github/images/happy_mobile_demo1.gif" width="300"/>
+</p>
+
 
 # :rocket: Technologies
 
-- [ReactJS](https://reactjs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [React Native](https://reactnative.dev/)
 - [React Native Maps]()
