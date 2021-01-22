@@ -33,6 +33,11 @@
 </p>
 
 
+To see the Web repository, [click here](https://github.com/johnfreitasau/happy-web).
+
+To see the API repository, [click here](https://github.com/johnfreitasau/happy-api).
+
+
 # :rocket: Technologies
 
 - [TypeScript](https://www.typescriptlang.org/)
