@@ -1,11 +1,11 @@
-import React, { useCallback } from 'react';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
-import MapView, { Marker, Callout, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Feather } from '@expo/vector-icons';
-import { useFonts } from 'expo-font';
 import { Nunito_600SemiBold, Nunito_700Bold, Nunito_800ExtraBold } from '@expo-google-fonts/nunito';
+import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useFonts } from 'expo-font';
+import React, { useCallback } from 'react';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import mapMarker from '../../src/images/map-marker.png';
 import { useOrphanagesQuery } from '../generated/graphql';
 
@@ -13,7 +13,9 @@ const OrphanagesMap: React.FC = () => {
   
     const navigation = useNavigation();
 
-    const {data, error, loading} = useOrphanagesQuery();
+    const {data, error, loading, refetch} = useOrphanagesQuery();
+    
+    navigation.addListener('focus', () => refetch())
 
     const handleNavigateToOrphanageDetails = useCallback((id : string) => {
       navigation.navigate('OrphanageDetails', {id});

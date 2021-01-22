@@ -78,7 +78,6 @@ const OrphanageData: React.FC = () => {
       <Text style={styles.title}>Orphanage form</Text>
 
       <Text style={styles.label}>Name</Text>
-      <Text style={styles.label}>{name}</Text>
       <TextInput
         style={styles.input}
         onChangeText={name => setName(name)}
@@ -87,7 +86,6 @@ const OrphanageData: React.FC = () => {
 
 
       <Text style={styles.label}>Email</Text>
-      <Text style={styles.label}>{email}</Text>
       <TextInput
         style={styles.input}
         value={email}

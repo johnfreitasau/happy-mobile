@@ -1,28 +1,26 @@
 import React from 'react';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-
-// import { useFonts } from 'expo-font';
-// import { Nunito_600SemiBold, Nunito_700Bold, Nunito_800ExtraBold } from '@expo-google-fonts/nunito';
+import { ApolloClient, InMemoryCache, ApolloProvider, DefaultOptions } from '@apollo/client';
 import Routes from './src/routes';
 import { Platform } from 'react-native';
 
   export const App: React.FC = () => {
 
-  // const [fontsLoaded] = useFonts({
-  //   nunito600: Nunito_600SemiBold, 
-  //   nunito700: Nunito_700Bold, 
-  //   nunito800: Nunito_800ExtraBold
-  // });
-
-  // if (!fontsLoaded) {
-  //   return null;
-  // }
+  const defaultOptions: DefaultOptions = {
+    watchQuery: {
+      fetchPolicy: "no-cache",
+      errorPolicy: "ignore"
+    },
+    query: {
+      fetchPolicy: "no-cache",
+      errorPolicy: "all"
+    }
+  }
 
   const client = new ApolloClient({
-    uri: Platform.OS === 'ios' ? 'http://localhost:4000/graphql' : 'http://192.168.1.255:4000/graphql',
-    // uri: 'http://10.0.2.2:4000/graphql',
+    uri: Platform.OS === 'ios' ? 'http://localhost:4000/graphql' : 'http://192.168.1.107:4000/graphql',
     credentials: 'include',
     cache: new InMemoryCache(),
+    defaultOptions
   });
 
   return (

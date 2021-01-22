@@ -32,8 +32,6 @@ const OrphanageDetails: React.FC = () => {
     );
   }, []);
 
-
-
   const [fontsLoaded] = useFonts({
     nunito600: Nunito_600SemiBold, 
     nunito700: Nunito_700Bold, 
